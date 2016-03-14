@@ -22,22 +22,28 @@ private String connection;
 private String userName;
 private String password;
 private String room;
+private int serverPort;
 private int minAt;
+private int early;
+private int late;
 
 //TCP
-ServerSocket serverSocket = null;
-static public String str = "?";
-static public int taskCount = 0;
+//ServerSocket serverSocket = null;
+//static public String str = "?";
+//static public int taskCount = 0;
 
-public registration(String connection, String user, String pass, String room, int minAt)
+public registration(String connection, String user, String pass, String room, int minAt, int port, int early, int late)
 {
 	
 	this.connection=connection;
 	this.userName=user;
 	this.password=pass;
 	this.room=room;
+	this.serverPort=port;
+	this.early=early;
+	this.late=late;
 	this.minAt = minAt;
-	//TCP
+	
 	
 }
 
@@ -48,6 +54,7 @@ public void run()
     PreparedStatement onTime = null;
     PreparedStatement late = null;
     PreparedStatement read = null;
+    PreparedStatement session = null;
     ResultSet rs = null;
     
     //TCP var
@@ -71,7 +78,7 @@ public void run()
 	{
 	 try
 	 {
-		serverSocket = new ServerSocket (4444);
+		serverSocket = new ServerSocket (this.serverPort);
      clientSocket = serverSocket.accept ();
     
      out = new PrintWriter (clientSocket.getOutputStream (), true);
@@ -107,9 +114,11 @@ public void run()
          try {
         	
      		
-     		onTime = con.prepareStatement("UPDATE attendances SET absent=0, on_time=1, time='"+timeStamp+"' WHERE attendance_id = 621 ");
-     		 late = con.prepareStatement("UPDATE attendances SET absent=0, on_time=0, late=1, time='"+timeStamp+"' WHERE attendance_id = 621 ");
-     		 read = con.prepareStatement("SELECT (abset, on_time, late) FROM attendances WHERE attendance_id = 621");
+     		//onTime = con.prepareStatement("UPDATE attendances SET absent=0, on_time=1, time='"+timeStamp+"' WHERE attendance_id = 621 ");
+     		// late = con.prepareStatement("UPDATE attendances SET absent=0, on_time=0, late=1, time='"+timeStamp+"' WHERE attendance_id = 621 ");
+     		// read = con.prepareStatement("SELECT (abset, on_time, late) FROM attendances WHERE attendance_id = 621");
+        	 
+        	 session = con.prepareStatement("SELECT (session_id) FROM sessions");
      	 } catch (SQLException e) {
      		 System.out.println(e);
  		}
@@ -142,12 +151,12 @@ public void run()
      
    
      try{
-    	 System.out.println("hell");
+    	// System.out.println("hell");
     	 out.close();
     	    in.close();
     	    clientSocket.close();
     	    serverSocket.close();
-    	    System.out.println("close");
+    	 //   System.out.println("close");
      }
      catch(IOException e)
      {
