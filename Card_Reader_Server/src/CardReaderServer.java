@@ -15,11 +15,11 @@ public class CardReaderServer {
 		 * REST == Sessioncode(A)-Sessionname(B)-Starttime(C)-Endtime(d)
 		 * A== String 11
 		 * B== String 30
-		 * C== String 5
-		 * D== String 5
+		 * C== String 8
+		 * D== String 8
 		 * 
 		 * Example:
-		 * 101UPDCSY1234/01Test Session                  10:0011:00
+		 * 101UPDCSY1234/01Test Session                  10:00:0011:00:00
 		 * 
 		 * 
 		 * CON == confirmation of student registration
@@ -50,7 +50,9 @@ public class CardReaderServer {
 		String userName= "group4_1516";
 		String password= "group4";
 		
+		roomSession rs = new roomSession(url, userName, password, 45, 4455, "127.0.0.1" );
 		
+		rs.start();
 		
 		
 	}

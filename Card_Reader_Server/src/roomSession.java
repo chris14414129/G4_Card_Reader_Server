@@ -1,6 +1,9 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
@@ -14,33 +17,36 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class roomSession {
+public class roomSession extends Thread {
 	private String connection;
 	private String userName;
 	private String password;
 	private String room;
 	private int serverPort;
+	private String broadcastIP;
 	private int minAt;
 	private int early;
 	private int late;
+	//doOnce prevents loop from occuring multiple times
+	private boolean doOnce =false ;
 	
-	public roomSession(String connection, String user, String pass, String room, int minAt, int port, int early, int late)
+	
+	public roomSession(String connection, String user, String pass, int minAt, int port,  String broadcastIP)
 	{
 		
 		this.connection=connection;
 		this.userName=user;
 		this.password=pass;
-		this.room=room;
 		this.serverPort=port;
-		this.early=early;
-		this.late=late;
 		this.minAt = minAt;
-		
+		this.broadcastIP=broadcastIP;
 		
 	}	
 	
 	public void run()
 	{
+		System.out.println("roomSession running");
+		
 		//SQL var
 		Connection con = null;
 	    PreparedStatement session = null;
@@ -49,23 +55,35 @@ public class roomSession {
 	    ResultSet rs2 = null;
 	    
 	    //TCP var
-		 PrintWriter out=null;
-		 ServerSocket serverSocket=null;
-		 Socket clientSocket=null;
-		 BufferedReader in=null;
-		 String inputLine="";
+	    DatagramSocket socket = null;
 		 String roomID;
+		 
 	 	
 	 	 try {
+	 		System.out.println("try");
 	   		con = DriverManager.getConnection(this.connection, this.userName, this.password);
-	   	} catch (SQLException e1) {
+	   		System.out.println("try2");
+	   	} catch (SQLException e) {
 	   		// TODO Auto-generated catch block
-	   		e1.printStackTrace();
+	   		e.printStackTrace();
+	   		System.out.println(e);
 	   	}
 
+	 	 try
+	 	 {
+	 		socket = new DatagramSocket ();
+	         
+	 	 }
+	 	 catch(IOException e)
+	 	 {
+	 		 
+	 	 }
 	 	
 		while((!Thread.currentThread().isInterrupted()))
+	 	 
 		{
+			//System.out.println("while_running");
+			
 			//gets date/time
 	    	//time is in loop to keep it updated.
 	    	
@@ -73,15 +91,17 @@ public class roomSession {
 	    	LocalTime localTime = LocalTime.now();
 	    	
 	    	//get's current minute and hour
-	    	int min = localTime.getMinute();
-	    	int hour = localTime.getHour()+1;
-	    	//int min= 45;
-	    	//int hour=19;
+	    	//int min = localTime.getMinute();
+	    //	int hour = localTime.getHour()+1;
+	    	int min= 45;
+	    	int hour=19;
 	    	
-	    	//System.out.println(hour);
-	    	//System.out.println(min);
+	    //	System.out.println(hour);
+	    //	System.out.println(min);
 	    	
 	    	String t = hour+":00:00";
+	    	
+	    	//System.out.println(t);
 	    	
 	    	
 	    	//gets current day
@@ -95,26 +115,99 @@ public class roomSession {
 	    	//minAt is the minute at which even will occur
 	    	if ((this.minAt == min))
 	    	{
-	    		
+	    		//System.out.println(doOnce);
+	    		if(!doOnce)
+	    		{
 	    		
 	    		try
 	    		{
-	    			session = con.prepareStatement("SELECT (session_code, ses_code, time, duration, room_id) FROM sessions WHERE time = '"+t+"'" );
-	    			room = con.prepareStatement("SELECT (room) FROM rooms WHERE room_id = '"+rs.getString(5)+"'");
+	    			//System.out.println(t);
+	    			session = con.prepareStatement("SELECT ses_code, ses_name, time, duration, room_id FROM sessions WHERE time = '"+t+"'" );
+	    			//session = con.prepareStatement("SELECT  ses_code, ses_name, time, duration, room_id FROM sessions WHERE session_id = 12");
+	    			//session = con.prepareStatement("SELECT * FROM sessions");
+	    			//room = con.prepareStatement("SELECT (room) FROM rooms WHERE room_id = '"+rs.getString(5)+"'");
 	    			rs = session.executeQuery();
-	    			rs2 = room.executeQuery();
+	    		//	rs2 = room.executeQuery();
+	    		
+	    			//boolean isMoreThanOneRow = rs.first() && rs.next();
+	    			
+	    			//System.out.println(isMoreThanOneRow);
 	    			
 	    			while (rs.next())
 		    		{
-		    			
+	    				System.out.println("Sessions_code :"+rs.getString(1));
+	    				System.out.println("session_name: "+rs.getString(2));
+	    				System.out.println("start_time: "+rs.getString(3));
+	    				System.out.println("duration: "+rs.getString(4));
+	    				System.out.println("room_id: "+rs.getString(5));
+	    				
+	    				String curRoom = rs.getString("room_id");
+	    				
+	    				String startTime = rs.getString("time");
+	    				
+	    				//add padding to names
+	    				String sCode = rs.getString("ses_code");
+	    				String sName = rs.getString("ses_name");
+	    				//String sName = "This is a test";
+	    				
+	    				//http://www.dotnetperls.com/padding-java
+	    				//http://stackoverflow.com/questions/388461/how-can-i-pad-a-string-in-java
+	    				String sCodeFormatted = String.format("%1$-11s", sCode).replace(" ", "*");
+	    				String sNameFormatted = String.format("%1$-30s", sName).replace(" ", "*");
+	    				
+	    				
+	    				
+	    				System.out.println(sCodeFormatted);
+	    				System.out.println(sNameFormatted);
+	    				
+	    				
+	    				//calculate and produce end hour using duration
+	    				int endHour = hour+rs.getInt("duration");
+	    				String endTime = endHour+":00:00";
+	    				System.out.println("endTime: "+endTime);
+	    				
+	    				try
+		    			{
+	    					byte[] buf = new byte[256];
+		    		         String output = curRoom+"UPD"+sCodeFormatted+sNameFormatted+startTime+endTime;
+		    		         
+		    		        
+							buf = output.getBytes ();
+		    		            InetAddress address = InetAddress.getByName (this.broadcastIP);
+		    		            DatagramPacket packet = new DatagramPacket (buf, buf.length, address, this.serverPort);
+		    		            socket.send(packet);
+		    		            
+		    		       
+		    		       
+		    		            
+		    		           
+		    			}
+		    			catch(IOException e)
+		    			{
+		    				e.printStackTrace();
+		    			}
+	    				
+	    				
+	  	    			
+	    				
 		    		}
+	    		
+	    		
 	    			
-	    		}
+	    		
+		    		}
 	    		catch (SQLException e)
 	    		{
-	    			
+	    			e.printStackTrace();
 	    		}
+	    		  System.exit(0);
+  				
+   			 //sets doOnce to true 
+ 	  		 //     doOnce = true;
+ 	  		      
+ 	  		    
 	    		
+	    		}
 	    		
 	    		
 	    		
@@ -125,12 +218,35 @@ public class roomSession {
 	    		
 	    		
 	    	}
-			
+	    	//resets doOnce
+        	if ((this.minAt != min))
+    		{
+    		doOnce=false;
+    		}
 			
 			
 		}
 		
-		 try{
+	    
+	    	  try {
+	                if (rs != null) {
+	                    rs.close();
+	                }
+	                if (session != null) {
+	                    session.close();
+	                }
+	                if (con != null) {
+	                    con.close();
+	                }
+	    }
+	    catch(SQLException e)
+	    {
+	    	
+	    }
+	    	  
+	    	  
+	    	
+		 /*try{
 		    	// System.out.println("hell");
 		    	 out.close();
 		    	    in.close();
@@ -141,7 +257,7 @@ public class roomSession {
 		     catch(IOException e)
 		     {
 		    	 
-		     }
+		     }*/
 		
 	}
 	
