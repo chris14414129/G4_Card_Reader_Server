@@ -44,7 +44,9 @@ public class roomSession {
 		//SQL var
 		Connection con = null;
 	    PreparedStatement session = null;
+	    PreparedStatement room = null;
 	    ResultSet rs = null;
+	    ResultSet rs2 = null;
 	    
 	    //TCP var
 		 PrintWriter out=null;
@@ -98,7 +100,9 @@ public class roomSession {
 	    		try
 	    		{
 	    			session = con.prepareStatement("SELECT (session_code, ses_code, time, duration, room_id) FROM sessions WHERE time = '"+t+"'" );
+	    			room = con.prepareStatement("SELECT (room) FROM rooms WHERE room_id = '"+rs.getString(5)+"'");
 	    			rs = session.executeQuery();
+	    			rs2 = room.executeQuery();
 	    			
 	    			while (rs.next())
 		    		{

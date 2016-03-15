@@ -3,6 +3,42 @@ public class CardReaderServer {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		
+		/* Commands for communication
+		 * XXXYYYREST
+		 * XXX == room_id e.g. 101
+		 * YYY == function e.g. UPD
+		 * REST == data
+		 * 
+		 * Sending
+		 * UPD == Update display for session, - for demo purposes only, wont be in string
+		 * REST == Sessioncode(A)-Sessionname(B)-Starttime(C)-Endtime(d)
+		 * A== String 11
+		 * B== String 30
+		 * C== String 5
+		 * D== String 5
+		 * 
+		 * Example:
+		 * 101UPDCSY1234/01Test Session                  10:0011:00
+		 * 
+		 * 
+		 * CON == confirmation of student registration
+		 * REST == String 4
+		 * PASS
+		 * FAIL
+		 * 
+		 * e.g
+		 * 101CONPASS
+		 * 
+		 * Receiving
+		 * REG == student registration
+		 * REST == int 8 student_id
+		 * 
+		 * e.g.
+		 * 101REG12345678
+		 */
+		
+		
 
 		//connection to server/table via vagrant
 				String urlVagrant= "jdbc:mysql://192.168.56.3:3306/Plan_A";
