@@ -23,25 +23,27 @@ private String userName;
 private String password;
 private String room;
 private int serverPort;
+private int clientPort;
 private int minAt;
 private int early;
-private int late;
+private int lateTime;
 
 //TCP
 //ServerSocket serverSocket = null;
 //static public String str = "?";
 //static public int taskCount = 0;
 
-public registration(String connection, String user, String pass, String room, int minAt, int port, int early, int late)
+public registration(String connection, String user, String pass, String room, int minAt, int sPort, int cPort, int early, int late)
 {
 	
 	this.connection=connection;
 	this.userName=user;
 	this.password=pass;
 	this.room=room;
-	this.serverPort=port;
+	this.serverPort=sPort;
+	this.clientPort=cPort;
 	this.early=early;
-	this.late=late;
+	this.lateTime=late;
 	this.minAt = minAt;
 	
 	
@@ -55,16 +57,29 @@ public void run()
     PreparedStatement late = null;
     PreparedStatement read = null;
     PreparedStatement session = null;
+    PreparedStatement checkCorrect = null;
+    PreparedStatement getRelatedSessions = null;
+    PreparedStatement checkWrong = null;
+    PreparedStatement wrongOnTime = null;
+    PreparedStatement wrongLate = null;
     ResultSet rs = null;
+    ResultSet rs2 = null;
+    ResultSet rs3 = null;
+    ResultSet rs4 = null;
     
     //TCP var
 	 PrintWriter out=null;
 	 ServerSocket serverSocket=null;
 	 Socket clientSocket=null;
 	 BufferedReader in=null;
-	 String inputLine="";
-	 String roomID;
- 	String studID;
+	 String inputLine=null;
+	 String roomID = null;
+ 	String studID = null;
+ 	String operation = null;
+ 	String sessionID = null;
+ 	String sesCode = null;
+ 	String wSessionID = null;
+ 	String timeTableID = null;
  	
  	 try {
    		con = DriverManager.getConnection(this.connection, this.userName, this.password);
@@ -76,6 +91,7 @@ public void run()
  	
 	while((!Thread.currentThread().isInterrupted()))
 	{
+		//System.out.println("p1");
 	 try
 	 {
 		serverSocket = new ServerSocket (this.serverPort);
@@ -89,10 +105,42 @@ public void run()
 		 
 	 }
      
-
+	// System.out.println("p2");
      try
      {
-    	// LocalTime localTime = LocalTime.now();
+    	//System.out.println("while_running");
+			
+			//gets date/time
+	    	//time is in loop to keep it updated.
+	    	
+	    	//gets current time
+	    	LocalTime localTime = LocalTime.now();
+	    	
+	    	//get's current minute and hour
+	    	//int min = localTime.getMinute();
+	    //	int hour = localTime.getHour()+1;
+	    	//int sec = localTime.getSecond();
+	    	int min= 55;
+	    	int hour=19;
+	    	int cHour=18;
+	    	int sec = 0;
+	    	
+	    	
+	    //	System.out.println(hour);
+	    //	System.out.println(min);
+	    	
+	    	String t = hour+":00:00";
+	    	
+	    	//System.out.println(t);
+	    	
+	    	
+	    	//gets current day
+	    	Calendar calendar = Calendar.getInstance();
+	    	Date date = calendar.getTime();
+	    	//String day = new SimpleDateFormat("E", Locale.ENGLISH).format(date.getTime());
+	    	String day = "Mon";
+	    	 
+	    	//System.out.println(day);
     	 
     	 String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
     	 
@@ -104,26 +152,108 @@ public void run()
          
     // }
          
-         roomID = inputLine.substring(0,3);
-         studID = inputLine.substring(3,11);
+         System.out.println(inputLine);
          
-         //System.out.println(studID);
+         roomID = inputLine.substring(0,3);
+         operation = inputLine.substring(3,6);
+         studID = inputLine.substring(6,14);
+         
+         System.out.println(roomID);
+         System.out.println(operation);
+         System.out.println(studID);
 
          //SQL
          
+         if (operation.equals("REG"))
+         { 
          try {
-        	
-     		
+        	System.out.println("try1");
+        	 session = con.prepareStatement("SELECT session_id, ses_code FROM sessions WHERE room_id = '"+roomID+"' && time = '"+t+"' && day = '"+day+"' ");
+
      		//onTime = con.prepareStatement("UPDATE attendances SET absent=0, on_time=1, time='"+timeStamp+"' WHERE attendance_id = 621 ");
      		// late = con.prepareStatement("UPDATE attendances SET absent=0, on_time=0, late=1, time='"+timeStamp+"' WHERE attendance_id = 621 ");
      		// read = con.prepareStatement("SELECT (abset, on_time, late) FROM attendances WHERE attendance_id = 621");
         	 
-        	 session = con.prepareStatement("SELECT (session_id) FROM sessions");
+        	 rs = session.executeQuery();
+        	 
+        	
+        	 
+        	 while(rs.next())
+        	 {
+        		 System.out.println(rs.getString(1));
+         		System.out.println(rs.getString(2));
+        		 
+        		 System.out.println("while1");
+        		 sessionID = rs.getString(1);
+        		 sesCode = rs.getString(2);
+        		 
+        		 checkCorrect  = con.prepareStatement("SELECT timetable_id FROM timetables WHERE session_id = '"+sessionID+"' AND student_id = '"+studID+"'");
+        		 System.out.println("pre-rs2");
+        		 rs2 = checkCorrect.executeQuery();
+        		 
+        		 if(rs2.next())
+        		 {
+        			 timeTableID = rs2.getString(1);
+        			 System.out.println(timeTableID);
+        			 if ((((min >= early) && (min < 59))) || ((min < lateTime) && (min > 0)))
+        			 {
+        				 System.out.println("if1");
+	        			 onTime = con.prepareStatement("UPDATE attendances SET absent=0, on_time=1, time='"+timeStamp+"' WHERE timetable_id = '"+timeTableID+"' ");
+	        			 
+	        			 onTime.executeUpdate();
+	        			 
+	        			 System.out.println("on time");
+        			 }
+	        		else
+	        			 {
+	        			System.out.println("else1");
+	        				 late = con.prepareStatement("UPDATE attendances SET absent=0, on_time=0, late=1, wrong_ses=1 time='"+timeStamp+"' WHERE timetable_id = '"+timeTableID+"' ");
+	        				 System.out.println("late");
+	        			 }
+        		 }
+        		 else
+        		 {
+        			 getRelatedSessions = con.prepareStatement("SELECT session_id FROM sessions WHERE ses_code = '"+sesCode+"'");
+        			 
+        			 rs3 = getRelatedSessions.executeQuery();
+        			 
+        			 if(rs3.next())
+        			 {
+        				 
+        				 checkWrong = con.prepareStatement("SELECT timetable_id FROM timetables WHERE session_id = '"+wSessionID+" AND student_id = '"+studID+"' '");
+        				 
+        				 rs4 = checkWrong.executeQuery();
+        				 
+        				 if (rs4.next())
+        				 {
+        					 System.out.println("if2");
+        					 if (((min >= early) && (min < 59)) || ((min < lateTime) && (min > 0)))
+                			 {
+        	        			 wrongOnTime = con.prepareStatement("UPDATE attendances SET absent=0, on_time=1, time='"+timeStamp+"', wrong_ses=1 WHERE timetable_id = '"+timeTableID+"' ");
+        	        			 
+        	        			 onTime.executeUpdate();
+        	        			 
+        	        			 System.out.println("one time wrong session");
+                			 }
+        	        		else
+        	        			 {
+        	        			System.out.println("else2");
+        	        				 wrongLate = con.prepareStatement("UPDATE attendances SET absent=0, on_time=0, late=1, wrong_ses=1 time='"+timeStamp+"', wrong_ses=1 WHERE timetable_id = '"+timeTableID+"' ");
+        	        				 System.out.println("late on time");
+        	        			 }
+        				 }
+        			 }
+        			 
+        		 }
+        		 
+        		 
+        	 }
+        	 
      	 } catch (SQLException e) {
      		 System.out.println(e);
  		}
-
-         try
+         }
+       /*  try
     	 {
     		 onTime.executeUpdate();
     		 
@@ -138,7 +268,7 @@ public void run()
     	 catch (SQLException e)
     	 {
     		 System.out.println(e);
-    	 }
+    	 }*/
         
 
     

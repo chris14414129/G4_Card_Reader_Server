@@ -57,7 +57,10 @@ public class CardReaderServer {
 		autoAbsent aA = new autoAbsent(urlVagrant, userNameVagrant, passwordVagrant, 45 );
 		
 		aA.start();
+																															
+		registration reg = new registration(urlVagrant, userNameVagrant, passwordVagrant, "xxx", 45, 1234, 5678, 10, 10);
 		
+		reg.start();
 	}
 
 }

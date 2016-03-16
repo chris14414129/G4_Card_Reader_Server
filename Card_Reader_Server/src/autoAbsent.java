@@ -75,10 +75,10 @@ public void run()
     	LocalTime localTime = LocalTime.now();
     	
     	//get's current minute and hour
-    	int min = localTime.getMinute();
-    	int hour = localTime.getHour()+1;
-    	//int min= 45;
-    	//int hour=19;
+    	//int min = localTime.getMinute();
+    	//int hour = localTime.getHour()+1;
+    	int min= 45;
+    	int hour=19;
     	
     	//System.out.println(hour);
     	//System.out.println(min);
@@ -87,8 +87,8 @@ public void run()
     	//gets current day
     	Calendar calendar = Calendar.getInstance();
     	Date date = calendar.getTime();
-    	String day = new SimpleDateFormat("E", Locale.ENGLISH).format(date.getTime());
-    	//String day = "Mon";
+    	//String day = new SimpleDateFormat("E", Locale.ENGLISH).format(date.getTime());
+    	String day = "Mon";
     	 
     	//System.out.println(day);
    
@@ -154,7 +154,7 @@ public void run()
 		
 		      //sets doOnce to true 
 		      doOnce = true;
-		    System.exit(0);
+		   // System.exit(0);
 		  
 		    }
 		    
