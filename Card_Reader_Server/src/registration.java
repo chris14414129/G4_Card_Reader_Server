@@ -120,7 +120,7 @@ public void run()
 	    	//int min = localTime.getMinute();
 	    //	int hour = localTime.getHour()+1;
 	    	//int sec = localTime.getSecond();
-	    	int min= 55;
+	    	int min= 20;
 	    	int hour=19;
 	    	int cHour=18;
 	    	int sec = 0;
@@ -195,7 +195,7 @@ public void run()
         		 {
         			 timeTableID = rs2.getString(1);
         			 System.out.println(timeTableID);
-        			 if ((((min >= early) && (min < 59))) || ((min < lateTime) && (min > 0)))
+        			 if ((((min >= early) && (min <= 59))) || ((min <= lateTime) && (min >= 0)))
         			 {
         				 System.out.println("if1");
 	        			 onTime = con.prepareStatement("UPDATE attendances SET absent=0, on_time=1, time='"+timeStamp+"' WHERE timetable_id = '"+timeTableID+"' ");
@@ -207,23 +207,28 @@ public void run()
 	        		else
 	        			 {
 	        			System.out.println("else1");
-	        				 late = con.prepareStatement("UPDATE attendances SET absent=0, on_time=0, late=1, wrong_ses=1 time='"+timeStamp+"' WHERE timetable_id = '"+timeTableID+"' ");
+	        				 late = con.prepareStatement("UPDATE attendances SET absent=0, late=1, time='"+timeStamp+"' WHERE timetable_id = '"+timeTableID+"' ");
+	        				late.executeUpdate();
 	        				 System.out.println("late");
 	        			 }
         		 }
         		 else
         		 {
+        			 System.out.println("else rs failed");
         			 getRelatedSessions = con.prepareStatement("SELECT session_id FROM sessions WHERE ses_code = '"+sesCode+"'");
         			 
-        			 rs3 = getRelatedSessions.executeQuery();
+        			
         			 
+        			 rs3 = getRelatedSessions.executeQuery();
+        			 System.out.println("rs3_exec");
         			 if(rs3.next())
         			 {
+        				 wSessionID = rs3.getString(1);
         				 
-        				 checkWrong = con.prepareStatement("SELECT timetable_id FROM timetables WHERE session_id = '"+wSessionID+" AND student_id = '"+studID+"' '");
+        				 checkWrong = con.prepareStatement("SELECT timetable_id FROM timetables WHERE session_id = '"+wSessionID+"' AND student_id = '"+studID+"'");
         				 
         				 rs4 = checkWrong.executeQuery();
-        				 
+        				 System.out.println("rs4_exec");
         				 if (rs4.next())
         				 {
         					 System.out.println("if2");
