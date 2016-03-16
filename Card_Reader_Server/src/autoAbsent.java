@@ -46,7 +46,10 @@ public void run()
     //Where the results are stored
     ResultSet rs = null;
     ResultSet rs2 = null;
- 
+    
+    //vars for prepared statement
+    String session = null;
+    String timetable = null;
    
     
     //connection to server
@@ -63,6 +66,8 @@ public void run()
     //any looped code use this as thread.stop is not recommended
     while (!Thread.currentThread().isInterrupted())
     {
+    	//System.out.println("while");
+    	
     	//gets date/time
     	//time is in loop to keep it updated.
     	
@@ -100,12 +105,15 @@ public void run()
 		    	
 		    	String timeStamp = new SimpleDateFormat("yyyy-MM-dd "+t).format(Calendar.getInstance().getTime());
 		    	
-		    	//System.out.println(t);
+		    	
+		    	
+		    	//System.out.println(timeStamp);
 		        
 		    	//prepared statement
 		
-		       pst = con.prepareStatement("SELECT session_id FROM sessions WHERE day = '"+day+"' && time ='"+timeStamp+"'");
-		       students = con.prepareStatement("SELECT * from timetables WHERE session_id = '"+rs.getString(1)+"'");
+		       pst = con.prepareStatement("SELECT session_id FROM sessions WHERE day = '"+day+"' && time ='"+t+"'");
+		      // students = con.prepareStatement("SELECT timetable_id from timetables WHERE session_id = '"+session+"'");
+		     //  attendance = con.prepareStatement("INSERT INTO attendances (timetable_id, absent, time) VALUES ('"+timetable+"',"+1+",'"+timeStamp+"')");
 		       //runs query
 		       rs = pst.executeQuery();
 		  
@@ -113,25 +121,27 @@ public void run()
 		     
 		       //looks through results
 		       while (rs.next()) {
-		    	//  System.out.println("rs session_id"+ rs.getString(1));
+		    	System.out.println("rs session_id: "+ rs.getString(1));
 		    
 		    	  //used for subquery
 		    	   //note: can be placed above with other prepared queries
-		    	 
+		    	session = rs.getString(1);
 		    	
+		    	students = con.prepareStatement("SELECT timetable_id from timetables WHERE session_id = '"+session+"'");
 		    	  rs2 = students.executeQuery();
 		    	  	//sub query can use previous results 
 		    	  // think for loop inside for loop
 		    
 			    	  while (rs2.next())
 			    	  {
-			    		 // System.out.println("rs2");
-			    		  System.out.println("students time_id: "+ rs2.getString(1) );
-			    		  System.out.println("students stud_id: "+ rs2.getString(2) );
-			    		  System.out.println("students session_id: "+ rs2.getString(3) );
+			    		  System.out.println("rs2");
+			    		  System.out.println("timetable_id : "+ rs2.getString(1) );
+			    		  System.out.println("time: "+timeStamp);
+			    		
+			    		  timetable = rs2.getString(1);
 			    		
 			    		  //can use results from inner results
-			    		 attendance = con.prepareStatement("INSERT INTO attendances (timetable_id, absent, time) VALUES ('"+rs2.getString(1)+"',"+1+",'"+t+"')");
+			    		  attendance = con.prepareStatement("INSERT INTO attendances (timetable_id, absent, time) VALUES ('"+timetable+"',"+1+",'"+timeStamp+"')");
 			    		  attendance.executeUpdate();
 			    	
 			    	  }
@@ -144,7 +154,7 @@ public void run()
 		
 		      //sets doOnce to true 
 		      doOnce = true;
-		    
+		    System.exit(0);
 		  
 		    }
 		    

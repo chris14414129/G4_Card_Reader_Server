@@ -50,10 +50,13 @@ public class CardReaderServer {
 		String userName= "group4_1516";
 		String password= "group4";
 		
-		roomSession rs = new roomSession(url, userName, password, 45, 4455, "127.0.0.1" );
+		//roomSession rs = new roomSession(url, userName, password, 45, 4455, "127.0.0.1" );
 		
-		rs.start();
+		//rs.start();
 		
+		autoAbsent aA = new autoAbsent(urlVagrant, userNameVagrant, passwordVagrant, 45 );
+		
+		aA.start();
 		
 	}
 
