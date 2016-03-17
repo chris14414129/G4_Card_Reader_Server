@@ -215,7 +215,7 @@ public void run()
         		 else
         		 {
         			 System.out.println("else rs failed");
-        			 getRelatedSessions = con.prepareStatement("SELECT session_id FROM sessions WHERE ses_code = '"+sesCode+"'");
+        			 getRelatedSessions = con.prepareStatement("SELECT session_id FROM sessions WHERE ses_code = '"+sesCode+"' AND time= '"+t+"' AND room_id = '"+roomID+"'");
         			 
         			
         			 
@@ -223,27 +223,34 @@ public void run()
         			 System.out.println("rs3_exec");
         			 if(rs3.next())
         			 {
+        				 System.out.println("rs3_next");
         				 wSessionID = rs3.getString(1);
+        				 
+        				 System.out.println(wSessionID);
         				 
         				 checkWrong = con.prepareStatement("SELECT timetable_id FROM timetables WHERE session_id = '"+wSessionID+"' AND student_id = '"+studID+"'");
         				 
         				 rs4 = checkWrong.executeQuery();
         				 System.out.println("rs4_exec");
+        				 
         				 if (rs4.next())
         				 {
+        					 System.out.println(rs4.getString(1));
         					 System.out.println("if2");
-        					 if (((min >= early) && (min < 59)) || ((min < lateTime) && (min > 0)))
+        					 if (((min >= early) && (min < 59)) || ((min < lateTime) && (min >= 0)))
                 			 {
-        	        			 wrongOnTime = con.prepareStatement("UPDATE attendances SET absent=0, on_time=1, time='"+timeStamp+"', wrong_ses=1 WHERE timetable_id = '"+timeTableID+"' ");
+        						 System.out.println("if3");
+      
+        	        			 wrongOnTime = con.prepareStatement("INSERT INTO attendances timetable_id,  on_time, time, wrong_ses VALUES ('"+timeTableID+"', 1, '"+timeStamp+"', 1)");
         	        			 
-        	        			 onTime.executeUpdate();
+        	        			 wrongOnTime.executeUpdate();
         	        			 
         	        			 System.out.println("one time wrong session");
                 			 }
         	        		else
         	        			 {
         	        			System.out.println("else2");
-        	        				 wrongLate = con.prepareStatement("UPDATE attendances SET absent=0, on_time=0, late=1, wrong_ses=1 time='"+timeStamp+"', wrong_ses=1 WHERE timetable_id = '"+timeTableID+"' ");
+        	        				 wrongLate = con.prepareStatement("INSERT INTO attendances timetable_id,  absent, time, wrong_ses VALUES ('"+timeTableID+"', 1, '"+timeStamp+"', 1)");
         	        				 System.out.println("late on time");
         	        			 }
         				 }
