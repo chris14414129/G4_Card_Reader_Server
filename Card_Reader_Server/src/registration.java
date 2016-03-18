@@ -120,7 +120,7 @@ public void run()
 	    	//int min = localTime.getMinute();
 	    //	int hour = localTime.getHour()+1;
 	    	//int sec = localTime.getSecond();
-	    	int min= 20;
+	    	int min=9;
 	    	int hour=19;
 	    	int cHour=18;
 	    	int sec = 0;
@@ -195,7 +195,7 @@ public void run()
         		 {
         			 timeTableID = rs2.getString(1);
         			 System.out.println(timeTableID);
-        			 if ((((min >= early) && (min <= 59))) || ((min <= lateTime) && (min >= 0)))
+        			 if ((((min >= early) && (min <= 59))) )
         			 {
         				 System.out.println("if1");
 	        			 onTime = con.prepareStatement("UPDATE attendances SET absent=0, on_time=1, time='"+timeStamp+"' WHERE timetable_id = '"+timeTableID+"' ");
@@ -204,7 +204,7 @@ public void run()
 	        			 
 	        			 System.out.println("on time");
         			 }
-	        		else
+	        		if ((min <= lateTime) && (min >= 0))
 	        			 {
 	        			System.out.println("else1");
 	        				 late = con.prepareStatement("UPDATE attendances SET absent=0, late=1, time='"+timeStamp+"' WHERE timetable_id = '"+timeTableID+"' ");
@@ -215,43 +215,51 @@ public void run()
         		 else
         		 {
         			 System.out.println("else rs failed");
-        			 getRelatedSessions = con.prepareStatement("SELECT session_id FROM sessions WHERE ses_code = '"+sesCode+"' AND time= '"+t+"' AND room_id = '"+roomID+"'");
+        			 getRelatedSessions = con.prepareStatement("SELECT session_id FROM sessions WHERE ses_code = '"+sesCode+"'");
         			 
         			
         			 
         			 rs3 = getRelatedSessions.executeQuery();
         			 System.out.println("rs3_exec");
-        			 if(rs3.next())
+        			 while(rs3.next())
         			 {
         				 System.out.println("rs3_next");
         				 wSessionID = rs3.getString(1);
         				 
         				 System.out.println(wSessionID);
         				 
-        				 checkWrong = con.prepareStatement("SELECT timetable_id FROM timetables WHERE session_id = '"+wSessionID+"' AND student_id = '"+studID+"'");
+        				 
+        				 
+        				 checkWrong = con.prepareStatement("SELECT timetable_id FROM timetables WHERE session_id = '"+wSessionID+"' AND student_id= '"+studID+"'");
         				 
         				 rs4 = checkWrong.executeQuery();
         				 System.out.println("rs4_exec");
         				 
-        				 if (rs4.next())
+        				 while (rs4.next())
         				 {
         					 System.out.println(rs4.getString(1));
+        					 
+        					 String wrongTimeTableID = rs4.getString(1);
+        				 
         					 System.out.println("if2");
-        					 if (((min >= early) && (min < 59)) || ((min < lateTime) && (min >= 0)))
+        					 
+        					 if ((((min >= early) && (min <= 59))) ) 
                 			 {
         						 System.out.println("if3");
       
-        	        			 wrongOnTime = con.prepareStatement("INSERT INTO attendances timetable_id,  on_time, time, wrong_ses VALUES ('"+timeTableID+"', 1, '"+timeStamp+"', 1)");
+        	        			 wrongOnTime = con.prepareStatement("INSERT INTO attendances (timetable_id,  on_time, time, wrong_ses) VALUES ('"+wrongTimeTableID+"', 1, '"+timeStamp+"', 1)");
         	        			 
         	        			 wrongOnTime.executeUpdate();
         	        			 
-        	        			 System.out.println("one time wrong session");
+        	        			 System.out.println("wrong time wrong session");
                 			 }
-        	        		else
+        					 if ((min <= lateTime) && (min >= 0))
         	        			 {
         	        			System.out.println("else2");
-        	        				 wrongLate = con.prepareStatement("INSERT INTO attendances timetable_id,  absent, time, wrong_ses VALUES ('"+timeTableID+"', 1, '"+timeStamp+"', 1)");
-        	        				 System.out.println("late on time");
+        	        				 wrongLate = con.prepareStatement("INSERT INTO attendances (timetable_id, late, time, wrong_ses) VALUES ('"+wrongTimeTableID+"', 1, '"+timeStamp+"', 1)");
+        	        				 System.out.println("late wrong session");
+        	        				 
+        	        				 wrongLate.executeUpdate();
         	        			 }
         				 }
         			 }
