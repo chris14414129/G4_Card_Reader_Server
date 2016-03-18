@@ -39,7 +39,7 @@ public class CardReaderServer {
 		 */
 		
 		
-
+//CREATE START/STOP, SAVE INFO/ SETTINGS GUI
 		//connection to server/table via vagrant
 				String urlVagrant= "jdbc:mysql://192.168.56.3:3306/Plan_A";
 				String userNameVagrant= "student";
