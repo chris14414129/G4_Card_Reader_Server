@@ -91,10 +91,10 @@ public class roomSession extends Thread {
 	    	LocalTime localTime = LocalTime.now();
 	    	
 	    	//get's current minute and hour
-	    	//int min = localTime.getMinute();
-	    //	int hour = localTime.getHour()+1;
-	    	int min= 45;
-	    	int hour=19;
+	    	int min = localTime.getMinute();
+	    	int hour = localTime.getHour()+1;
+	    	//int min= 45;
+	    //	int hour=19;
 	    	
 	    //	System.out.println(hour);
 	    //	System.out.println(min);
@@ -110,10 +110,10 @@ public class roomSession extends Thread {
 	    	String day = new SimpleDateFormat("E", Locale.ENGLISH).format(date.getTime());
 	    	//String day = "Mon";
 	    	 
-	    	//System.out.println(day);
+	    	System.out.println(day);
 	   
 	    	//minAt is the minute at which even will occur
-	    	if ((this.minAt == min))
+	    	if (day.equals("Mon"))
 	    	{
 	    		//System.out.println(doOnce);
 	    		if(!doOnce)
