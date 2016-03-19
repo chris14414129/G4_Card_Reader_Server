@@ -91,10 +91,10 @@ public class roomSession extends Thread {
 	    	LocalTime localTime = LocalTime.now();
 	    	
 	    	//get's current minute and hour
-	    	int min = localTime.getMinute();
-	    	int hour = localTime.getHour()+1;
-	    	//int min= 45;
-	    //	int hour=19;
+	    	//int min = localTime.getMinute();
+	    	//int hour = localTime.getHour()+1;
+	    	int min= 55;
+	    	int hour=18;
 	    	
 	    //	System.out.println(hour);
 	    //	System.out.println(min);
@@ -107,8 +107,8 @@ public class roomSession extends Thread {
 	    	//gets current day
 	    	Calendar calendar = Calendar.getInstance();
 	    	Date date = calendar.getTime();
-	    	String day = new SimpleDateFormat("E", Locale.ENGLISH).format(date.getTime());
-	    	//String day = "Mon";
+	    	//String day = new SimpleDateFormat("E", Locale.ENGLISH).format(date.getTime());
+	    	String day = "Mon";
 	    	 
 	    	System.out.println(day);
 	   

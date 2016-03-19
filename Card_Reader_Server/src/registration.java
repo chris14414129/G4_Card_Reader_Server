@@ -137,11 +137,11 @@ public void run()
 	LocalTime localTime = LocalTime.now();
 	
 	//get's current minute and hour
-	int min = localTime.getMinute();
-   	int hour = localTime.getHour()+1;
+	//int min = localTime.getMinute();
+  // 	int hour = localTime.getHour()+1;
 	//int sec = localTime.getSecond();
-	//int min=9;
-	//int hour=19;
+	int min=05;
+	int hour=19;
 	//int cHour=18;
 	//int sec = 0;
 	
@@ -197,9 +197,12 @@ public void run()
 	 rs = session.executeQuery();
 	 
 	
-	 
+	 if (rs.next())
+	 {
+		 rs = session.executeQuery();
 	 while(rs.next())
 	 {
+		 System.out.println("if"+rs.getString(1));
 		 System.out.println(rs.getString(1));
 		System.out.println(rs.getString(2));
 		 
@@ -257,6 +260,8 @@ public void run()
 				 rs4 = checkWrong.executeQuery();
 				 System.out.println("rs4_exec");
 				 
+				 if (rs4.next())
+				 {
 				 while (rs4.next())
 				 {
 					 System.out.println(rs4.getString(1));
@@ -269,7 +274,7 @@ public void run()
 	    			 {
 						 System.out.println("if3");
      
-	        			 wrongOnTime = con.prepareStatement("INSERT INTO attendances (timetable_id,  on_time, time, wrong_ses) VALUES ('"+wrongTimeTableID+"', 1, '"+timeStamp+"', 1)");
+	        			 wrongOnTime = con.prepareStatement("UPDATE attendances SET absent=0, on_time=1, time='"+timeStamp+"', wrong_ses=1 WHERE timetable_id = '"+wrongTimeTableID+"' ");
 	        			 
 	        			 wrongOnTime.executeUpdate();
 	        			 
@@ -279,12 +284,18 @@ public void run()
 					 if ((min <= lateTime) && (min >= 0))
 	        			 {
 	        			System.out.println("else2");
-	        				 wrongLate = con.prepareStatement("INSERT INTO attendances (timetable_id, late, time, wrong_ses) VALUES ('"+wrongTimeTableID+"', 1, '"+timeStamp+"', 1)");
+	        				 wrongLate = con.prepareStatement("UPDATE attendances SET absent=0, late=1, time='"+timeStamp+"', wrong_ses=1 WHERE timetable_id = '"+wrongTimeTableID+"' ");
 	        				 System.out.println("late wrong session");
 	        				 
 	        				 wrongLate.executeUpdate();
 	        				 response(roomID, "CON", "LATE");
 	        			 }
+				 }
+				 }
+				 else
+				 {
+					 System.out.println("inner FAILL");
+					 response(roomID, "CON", "FAIL");
 				 }
 			 }
 			 
@@ -292,7 +303,12 @@ public void run()
 		 
 		 
 	 }
-      
+	 }
+	 else
+	 { 
+		 System.out.println("outer FAILL");
+		 response(roomID, "CON", "FAIL");
+	 }
       
 	 
 	 
