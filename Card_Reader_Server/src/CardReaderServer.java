@@ -54,7 +54,7 @@ public class CardReaderServer {
 		
 		//rs.start();
 		
-		autoAbsent aA = new autoAbsent(urlVagrant, userNameVagrant, passwordVagrant, 45 );
+		autoAbsent aA = new autoAbsent(urlVagrant, userNameVagrant, passwordVagrant, "Sat" );
 		
 		aA.start();
 																															
