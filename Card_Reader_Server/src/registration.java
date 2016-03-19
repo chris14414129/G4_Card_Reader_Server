@@ -140,7 +140,7 @@ public void run()
 	//int min = localTime.getMinute();
   // 	int hour = localTime.getHour()+1;
 	//int sec = localTime.getSecond();
-	int min=05;
+	int min=9;
 	int hour=19;
 	//int cHour=18;
 	//int sec = 0;
@@ -187,8 +187,8 @@ public void run()
        if (operation.equals("REG"))
        { 
        try {
-	System.out.println("try1");
-	 session = con.prepareStatement("SELECT session_id, ses_code FROM sessions WHERE room_id = '"+roomID+"' && time = '"+t+"' && day = '"+day+"' ");
+    	   System.out.println("try1");
+    	   session = con.prepareStatement("SELECT session_id, ses_code FROM sessions WHERE room_id = '"+roomID+"' && time = '"+t+"' && day = '"+day+"' ");
 
 	//onTime = con.prepareStatement("UPDATE attendances SET absent=0, on_time=1, time='"+timeStamp+"' WHERE attendance_id = 621 ");
 	// late = con.prepareStatement("UPDATE attendances SET absent=0, on_time=0, late=1, time='"+timeStamp+"' WHERE attendance_id = 621 ");
@@ -218,17 +218,34 @@ public void run()
 		 {
 			 timeTableID = rs2.getString(1);
 			 System.out.println(timeTableID);
-			 if ((((min >= early) && (min <= 59))) )
+			 PreparedStatement onTimeCheck = con.prepareStatement("SELECT absent FROM attendances WHERE timetable_id = '"+timeTableID+"'");
+			
+			 ResultSet oTCRS = onTimeCheck.executeQuery();
+			
+			 if(oTCRS.next())
 			 {
+
+				 int status = oTCRS.getInt(1);
+				 System.out.println("status1: "+status);
+				
+				 
+				 if (status == 1)
+				 {
+				 
+				 if ((((min >= early) && (min <= 59))) )
+				 {
 				 System.out.println("if1");
+				 
 				 onTime = con.prepareStatement("UPDATE attendances SET absent=0, on_time=1, time='"+timeStamp+"' WHERE timetable_id = '"+timeTableID+"' ");
-				 
-				 onTime.executeUpdate();
-				 
-				 System.out.println("on time");
-				 response(roomID, "CON", "PASS");
-			 }
-			if ((min <= lateTime) && (min >= 0))
+				 	
+						 System.out.println("ok");
+						 onTime.executeUpdate();
+						 response(roomID, "CON", "PASS");
+					}
+
+				// System.out.println("on time");
+	 
+				 else if ((min <= lateTime) && (min >= 0))
 				 {
 				System.out.println("else1");
 					 late = con.prepareStatement("UPDATE attendances SET absent=0, late=1, time='"+timeStamp+"' WHERE timetable_id = '"+timeTableID+"' ");
@@ -236,7 +253,18 @@ public void run()
 					 System.out.println("late");
 					 response(roomID, "CON", "LATE");
 				 }
-		 }
+				 
+			 
+				 else
+				 {
+				 System.out.println("fail");
+				 response(roomID, "CON", "FAIL");
+				 }
+				 }
+			 } 
+		 } 
+		 
+		 
 		 else
 		 {
 			 System.out.println("else rs failed");
@@ -246,6 +274,7 @@ public void run()
 			 
 			 rs3 = getRelatedSessions.executeQuery();
 			 System.out.println("rs3_exec");
+
 			 while(rs3.next())
 			 {
 				 System.out.println("rs3_next");
@@ -262,6 +291,7 @@ public void run()
 				 
 				 if (rs4.next())
 				 {
+					 rs4 = checkWrong.executeQuery();
 				 while (rs4.next())
 				 {
 					 System.out.println(rs4.getString(1));
@@ -270,6 +300,22 @@ public void run()
 				 
 					 System.out.println("if2");
 					 
+					 PreparedStatement onTimeCheck = con.prepareStatement("SELECT absent FROM attendances WHERE timetable_id = '"+wrongTimeTableID+"'");
+						
+					 System.out.println("if2.1");
+					 ResultSet oTCRS = onTimeCheck.executeQuery();
+					 System.out.println("if");
+					
+					if (oTCRS.next()) 
+					{
+						 System.out.println("if2.2");
+						
+						 System.out.println("if2.4");
+						 int status = oTCRS.getInt(1);
+						 System.out.println("if2.5");
+					 if (status == 1)
+					 {
+						 System.out.println("if2.3");
 					 if ((((min >= early) && (min <= 59))) ) 
 	    			 {
 						 System.out.println("if3");
@@ -281,7 +327,7 @@ public void run()
 	        			 System.out.println("wrong time wrong session");
 	        			 response(roomID, "CON", "PASS");
 	    			 }
-					 if ((min <= lateTime) && (min >= 0))
+					 else if ((min <= lateTime) && (min >= 0))
 	        			 {
 	        			System.out.println("else2");
 	        				 wrongLate = con.prepareStatement("UPDATE attendances SET absent=0, late=1, time='"+timeStamp+"', wrong_ses=1 WHERE timetable_id = '"+wrongTimeTableID+"' ");
@@ -290,12 +336,16 @@ public void run()
 	        				 wrongLate.executeUpdate();
 	        				 response(roomID, "CON", "LATE");
 	        			 }
-				 }
-				 }
+				 
+				 
 				 else
 				 {
 					 System.out.println("inner FAILL");
 					 response(roomID, "CON", "FAIL");
+				 }
+				 }
+				 }
+				 }
 				 }
 			 }
 			 
