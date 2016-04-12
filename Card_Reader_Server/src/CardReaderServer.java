@@ -2,6 +2,7 @@
 public class CardReaderServer {
 
 	public static void main(String[] args) {
+		new GUI();
 		// TODO Auto-generated method stub
 		
 		/* Commands for communication
