@@ -13,11 +13,12 @@ public class GUI{
 	public GUI(){
 		window = new JFrame();
 		window.setTitle("Server");
-		window.setSize(600, 600);
+		window.setSize(500, 500);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		buildButtonPanel();
 		window.add(buttonPanel);
+		
 		window.setResizable(false);
 		window.setLocationRelativeTo(null);
 		window.pack();
@@ -37,9 +38,11 @@ public class GUI{
 		
 		startBtn.addActionListener(new actionListener());
 		stopBtn.addActionListener(new actionListener());
+		settingsBtn.addActionListener(new actionListener());
 		
 		buttonPanel.add(startBtn);
 		buttonPanel.add(stopBtn);
+		buttonPanel.add(settingsBtn);
 	}
 	
 	private class actionListener implements ActionListener{
@@ -50,6 +53,9 @@ public class GUI{
 			}
 			if (src == stopBtn){
 				
+			}
+			if (src == settingsBtn){
+				new Settings(window);
 			}
 		}
 	} 
