@@ -7,7 +7,7 @@ public class GUI{
 	
 	private JFrame window;
 	private JPanel buttonPanel;
-	private JButton startBtn, stopBtn;
+	private JButton startBtn, stopBtn, settingsBtn;
 	private Icon startIcon, stopIcon;
 	
 	public GUI(){
@@ -31,6 +31,7 @@ public class GUI{
 		
 		startBtn = new JButton("Start", startIcon);
 		stopBtn = new JButton("Stop", stopIcon);
+		settingsBtn = new JButton("Settings");
 		
 		startBtn.addActionListener(new actionListener());
 		stopBtn.addActionListener(new actionListener());
