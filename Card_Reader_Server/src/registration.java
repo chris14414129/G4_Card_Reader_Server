@@ -27,23 +27,15 @@ private String broadcastIP;
 private int early;
 private int lateTime;
 
-//TCP
-//ServerSocket serverSocket = null;
-//static public String str = "?";
-//static public int taskCount = 0;
-
 public registration(String connection, String user, String pass, String room, int minAt, int sPort, int cPort, int early, int late)
 {
 	
 	this.connection=connection;
 	this.userName=user;
 	this.password=pass;
-	//this.room=room;
-	//this.serverPort=sPort;
 	this.clientPort=cPort;
 	this.early=early;
 	this.lateTime=late;
-	//this.minAt = minAt;
 	this.broadcastIP="127.0.0.1";
 	
 	
@@ -87,10 +79,10 @@ public void run()
     ResultSet rs4 = null;
     
     
-    //TCP var
+    //UDP var
     DatagramSocket socket = null;
     DatagramPacket packet = null;
-	BufferedReader in=null;
+	//BufferedReader in=null;
 	String inputLine=null;
 	String roomID = null;
  	String studID = null;
@@ -100,13 +92,11 @@ public void run()
  	String wSessionID = null;
  	String timeTableID = null;
  	String sqlHour = null;
- 	//	byte[] buf = new byte[256];
-    //String output = "";
-    int duration = 0;
     int sqlHourInt = 0;
     
     boolean doOnce = true;
  	
+    //establishes connection to DB server
  	 try 
  	 	{
    			con = DriverManager.getConnection(this.connection, this.userName, this.password);
@@ -121,7 +111,7 @@ public void run()
 	{
 		if (doOnce == true)
 			{
-				//System.out.println("p1");
+				
 				try
 					{
 						socket = new DatagramSocket (1234);
@@ -132,6 +122,8 @@ public void run()
 						socket.receive (packet);
 						inputLine = new String (packet.getData());
 						// System.out.println ("Received packet: " + received);
+						
+						 //  System.out.println(inputLine);
 		 
 					}
 				catch (IOException e)
@@ -143,19 +135,19 @@ public void run()
 		LocalTime localTime = LocalTime.now();
 	
 		//get's current minute and hour
-		//int min = localTime.getMinute();
-		// 	int hour = localTime.getHour()+1;
+		int min = localTime.getMinute();
+		 	int cHour = localTime.getHour()+1; //cHour means current Hour
 		//int sec = localTime.getSecond();
-		int min=05;
-		int cHour=19;
+		//int min=05;
+		//int cHour=19;
 		int hour=cHour+1;
-	
 		//int sec = 0;
 	
 	
 		//	System.out.println(hour);
 		//	System.out.println(min);
 	
+		//generates string based on time for SQL queries
 		String t = hour+":00:00";
 		String t2 = cHour+":00:00";
 	
@@ -165,23 +157,18 @@ public void run()
 		//gets current day
 		Calendar calendar = Calendar.getInstance();
 		Date date = calendar.getTime();
-		//String day = new SimpleDateFormat("E", Locale.ENGLISH).format(date.getTime());
-		String day = "Mon";
+		String day = new SimpleDateFormat("E", Locale.ENGLISH).format(date.getTime());
+		//String day = "Mon";
 		 
 		//System.out.println(day);
 	  	 
+		//timestamp used for queries.
 	  	String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
   	 
-	  	//inputLine=in.readLine ();
-	  	//  while ((inputLine = in.readLine ()) != null)
-	  	// {
-       System.out.println ("Server < " + inputLine);
-       System.out.println(inputLine);
+	 
        
-       // }
-       
-       System.out.println(inputLine);
-       
+    
+       //creates vars 
        roomID = inputLine.substring(0,3);
        operation = inputLine.substring(3,6);
        studID = inputLine.substring(6,14);
@@ -199,9 +186,7 @@ public void run()
     		   System.out.println("try1");
     		   session = con.prepareStatement("SELECT session_id, ses_code, duration, Time FROM sessions WHERE room_id = '"+roomID+"'AND day = '"+day+"' AND (time = '"+t+"' OR time = '"+t2+"') ");
 
-    		   //onTime = con.prepareStatement("UPDATE attendances SET absent=0, on_time=1, time='"+timeStamp+"' WHERE attendance_id = 621 ");
-    		   // late = con.prepareStatement("UPDATE attendances SET absent=0, on_time=0, late=1, time='"+timeStamp+"' WHERE attendance_id = 621 ");
-    		   // read = con.prepareStatement("SELECT (abset, on_time, late) FROM attendances WHERE attendance_id = 621");
+   
 	 
     		   rs = session.executeQuery();
 	 

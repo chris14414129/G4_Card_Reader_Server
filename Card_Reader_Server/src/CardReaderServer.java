@@ -53,7 +53,7 @@ public class CardReaderServer {
 		
 		roomSession rs = new roomSession(urlVagrant, userNameVagrant, passwordVagrant, 45, 4455, "127.0.0.1" );
 		
-		rs.start();
+	//	rs.start();
 		
 		autoAbsent aA = new autoAbsent(urlVagrant, userNameVagrant, passwordVagrant, "Sat" );
 		
@@ -62,6 +62,8 @@ public class CardReaderServer {
 		registration reg = new registration(urlVagrant, userNameVagrant, passwordVagrant, "xxx", 45, 1234, 5678, 50, 10);
 		
 		//reg.start();
+		
+		GUI g = new GUI();
 	}
 
 }

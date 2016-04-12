@@ -14,7 +14,7 @@ private String connection;
 private String userName;
 private String password;
 
-//minAt is the minute at which even will occur
+//dayAt is the day at which even will occur
 private String dayAt;
 //doOnce prevents loop from occuring multiple times
 private boolean doOnce =false ;
@@ -69,7 +69,7 @@ public void run()
     //any looped code use this as thread.stop is not recommended
     while (!Thread.currentThread().isInterrupted())
     {
-    	//System.out.println("while");
+    	
     	
     	//gets date/time
     	//time is in loop to keep it updated.
@@ -99,33 +99,32 @@ public void run()
     	//minAt is the minute at which even will occur
     	if ((day.equals(dayAt)))
     	{
-    		//System.out.println("try");
+    	
     		//doOnce prevents loop from occuring multiple times
     		if(!doOnce)
     		{
     			
 		    try{
-		    	////System.out.println("try2");
+		    
 		        //creates hour found in database for session
 		    	//String t = hour+":00:00";
 		    	
 		    //	String timeStamp = new SimpleDateFormat("yyyy-MM-dd "+t).format(Calendar.getInstance().getTime());
-		    	
-		    	
-		    	
+
 		    	//System.out.println(timeStamp);
 		        
-		    	//prepared statement
+		    	
 		    	
 		    	  Date d1 = new Date();
 	    	    	//Calendar cal=GregorianCalendar.getInstance();
 	    	    	
+		    	  
+		    	  //for loop, used to go through seven days
 	    	    	for (int i = 0; i<7; i++ )
 	    	    	{
+	    	    		//generates day based on for loop i
 	    	    		String nWeekDate =  new SimpleDateFormat("YYYY-MM-dd", Locale.ENGLISH).format(d1.getTime() + i * 24 * 60 * 60 * 1000);
-	    	    		
-	    	    	//	LocalDate d = LocalDate.now();
-	    	    		//LocalDate d2 = d.plusDays(i);
+	    	    	
 	    	    		
 	    	    		
 	    	    		String nWeekDay = new SimpleDateFormat("E", Locale.ENGLISH).format(d1.getTime() + i * 24 * 60 * 60 * 1000);
@@ -135,10 +134,9 @@ public void run()
 	    	    		
 	    	    		
 	    		
-		
+	    	    //prepared statement, gets sessions based on day 
 		       pst = con.prepareStatement("SELECT session_id, time, day  FROM sessions WHERE day = '"+nWeekDay+"'");
-		      // students = con.prepareStatement("SELECT timetable_id from timetables WHERE session_id = '"+session+"'");
-		     //  attendance = con.prepareStatement("INSERT INTO attendances (timetable_id, absent, time) VALUES ('"+timetable+"',"+1+",'"+timeStamp+"')");
+		 
 		       //runs query
 		       rs = pst.executeQuery();
 		  
@@ -159,7 +157,7 @@ public void run()
 		    	
 		    	
 		    	
-		    	
+		    	//gets timetable and student information based on session id
 		    	students = con.prepareStatement("SELECT timetable_id from timetables WHERE session_id = '"+session+"'");
 		    	  rs2 = students.executeQuery();
 		    	  	//sub query can use previous results 
@@ -168,18 +166,15 @@ public void run()
 		    	  
 			    	  while (rs2.next())
 			    	  {
-			    		  System.out.println("rs2");
-			    		  System.out.println("timetable_id : "+ rs2.getString(1) );
+			    		//  System.out.println("rs2");
+			    		//  System.out.println("timetable_id : "+ rs2.getString(1) );
 			    		 // System.out.println("time: "+timeStamp);
 			    		
 			    		  timetable = rs2.getString(1);
 			    		  
 			    		  String regTime = nWeekDate +" "+ time;
-			    		 
 			    		
-			    		  
-			    		
-			    		  //can use results from inner results
+			    		  //adds absent to attendances based on assigned sessions using timetable id
 			    		  attendance = con.prepareStatement("INSERT INTO attendances (timetable_id, absent, time) VALUES ('"+timetable+"',"+1+",'"+regTime+"')");
 			    		  attendance.executeUpdate();
 			    		  
@@ -194,7 +189,9 @@ public void run()
 		       
 		       
 		
-		      //sets doOnce to true 
+		      //sets doOnce to true, prevents repeating during same day,
+	    	   	
+	    	  
 		      doOnce = true;
 		    System.exit(0);
 		  

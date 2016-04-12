@@ -13,14 +13,16 @@ public class GUI{
 	public GUI(){
 		window = new JFrame();
 		window.setTitle("Server");
-		window.setSize(300, 300);
+		window.setSize(600, 600);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		buildButtonPanel();
-		
-		window.setVisible(true);
+		window.add(buttonPanel);
 		window.setResizable(false);
 		window.setLocationRelativeTo(null);
+		window.pack();
+		window.setVisible(true);
+		
 	}
 	
 	public void buildButtonPanel(){
