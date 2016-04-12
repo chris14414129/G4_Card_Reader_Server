@@ -21,7 +21,7 @@ public class roomSession extends Thread {
 	private String connection;
 	private String userName;
 	private String password;
-	private String room;
+	//private String room;
 	private int serverPort;
 	private String broadcastIP;
 	private int minAt;
@@ -50,19 +50,19 @@ public class roomSession extends Thread {
 		//SQL var
 		Connection con = null;
 	    PreparedStatement session = null;
-	    PreparedStatement room = null;
+	   // PreparedStatement room = null;
 	    ResultSet rs = null;
 	    ResultSet rs2 = null;
 	    
 	    //TCP var
 	    DatagramSocket socket = null;
-		 String roomID;
+		// String roomID;
 		 
 	 	
 	 	 try {
-	 		System.out.println("try");
+	 	//	System.out.println("try");
 	   		con = DriverManager.getConnection(this.connection, this.userName, this.password);
-	   		System.out.println("try2");
+	   	//	System.out.println("try2");
 	   	} catch (SQLException e) {
 	   		// TODO Auto-generated catch block
 	   		e.printStackTrace();
@@ -93,8 +93,8 @@ public class roomSession extends Thread {
 	    	//get's current minute and hour
 	    	//int min = localTime.getMinute();
 	    	//int hour = localTime.getHour()+1;
-	    	int min= 55;
-	    	int hour=18;
+	    	int min= 45;
+	    	int hour=19;
 	    	
 	    //	System.out.println(hour);
 	    //	System.out.println(min);
@@ -110,10 +110,10 @@ public class roomSession extends Thread {
 	    	//String day = new SimpleDateFormat("E", Locale.ENGLISH).format(date.getTime());
 	    	String day = "Mon";
 	    	 
-	    	System.out.println(day);
+	    	//System.out.println(day);
 	   
 	    	//minAt is the minute at which even will occur
-	    	if (day.equals("Mon"))
+	    	if (min==minAt)
 	    	{
 	    		//System.out.println(doOnce);
 	    		if(!doOnce)
@@ -122,8 +122,8 @@ public class roomSession extends Thread {
 	    		try
 	    		{
 	    			//System.out.println(t);
-	    			session = con.prepareStatement("SELECT ses_code, ses_name, time, duration, room_id FROM sessions WHERE time = '"+t+"'" );
-	    			//session = con.prepareStatement("SELECT  ses_code, ses_name, time, duration, room_id FROM sessions WHERE session_id = 12");
+	    		session = con.prepareStatement("SELECT ses_code, ses_name, time, duration, room_id FROM sessions WHERE time = '"+t+"'" );
+	    		//session = con.prepareStatement("SELECT  time from sessions WHERE room_id=10");
 	    			//session = con.prepareStatement("SELECT * FROM sessions");
 	    			//room = con.prepareStatement("SELECT (room) FROM rooms WHERE room_id = '"+rs.getString(5)+"'");
 	    			rs = session.executeQuery();
@@ -135,15 +135,40 @@ public class roomSession extends Thread {
 	    			
 	    			while (rs.next())
 		    		{
-	    				System.out.println("Sessions_code :"+rs.getString(1));
+	    				
+	    				//System.out.println(rs);
+	    				/*System.out.println("Sessions_code :"+rs.getString(1));
 	    				System.out.println("session_name: "+rs.getString(2));
 	    				System.out.println("start_time: "+rs.getString(3));
 	    				System.out.println("duration: "+rs.getString(4));
-	    				System.out.println("room_id: "+rs.getString(5));
+	    				System.out.println("room_id: "+rs.getString(5));*/
 	    				
-	    				String curRoom = rs.getString("room_id");
+	    				
+	    				
+	    				//System.out.println(rs.getString(1));
+	    				
+	    				
+	    				int curRoomInt = rs.getInt(5);
+	    				
+	    				//int curRoomInt = 9;
+	    				
+	    				String curRoom = "";
+	    				
+	    				if (curRoomInt < 10)
+	    				{
+	    					curRoom = "00"+curRoomInt;
+	    				}
+	    				else if ((curRoomInt < 100) && (curRoomInt >10))
+	    				{
+	    					curRoom = "0"+curRoomInt;
+	    				}
+	    				
+	    				//System.out.println(curRoom);
+	    				
+	    				//System.exit(0);
 	    				
 	    				String startTime = rs.getString("time");
+	    				
 	    				
 	    				//add padding to names
 	    				String sCode = rs.getString("ses_code");
@@ -157,14 +182,16 @@ public class roomSession extends Thread {
 	    				
 	    				
 	    				
-	    				System.out.println(sCodeFormatted);
-	    				System.out.println(sNameFormatted);
+	    				//System.out.println(sCodeFormatted);
+	    			//	System.out.println(sNameFormatted);
 	    				
 	    				
 	    				//calculate and produce end hour using duration
 	    				int endHour = hour+rs.getInt("duration");
 	    				String endTime = endHour+":00:00";
-	    				System.out.println("endTime: "+endTime);
+	    		//		System.out.println("endTime: "+endTime);
+	    				
+	    				
 	    				
 	    				try
 		    			{
@@ -200,10 +227,10 @@ public class roomSession extends Thread {
 	    		{
 	    			e.printStackTrace();
 	    		}
-	    		  System.exit(0);
+	    		//  System.exit(0);
   				
    			 //sets doOnce to true 
- 	  		 //     doOnce = true;
+ 	  		    //  doOnce = true;
  	  		      
  	  		    
 	    		

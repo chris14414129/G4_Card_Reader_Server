@@ -222,8 +222,8 @@ public void run()
     				   Time sqlTime = rs.getTime(4);
     				   sqlHour = new SimpleDateFormat("HH", Locale.ENGLISH).format(sqlTime.getTime());
     				   System.out.println(sqlHour);
-    				 //  sqlHourInt = Integer.getInteger(sqlHour);
-    					sqlHourInt = 19;
+    				   sqlHourInt = Integer.parseInt(sqlHour);
+    					//sqlHourInt = 19;
     					System.out.println(sqlHourInt);
     					
     				  

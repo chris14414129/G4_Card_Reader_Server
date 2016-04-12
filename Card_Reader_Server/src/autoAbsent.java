@@ -118,11 +118,16 @@ public void run()
 		    	//prepared statement
 		    	
 		    	  Date d1 = new Date();
+	    	    	//Calendar cal=GregorianCalendar.getInstance();
 	    	    	
 	    	    	for (int i = 0; i<7; i++ )
 	    	    	{
 	    	    		String nWeekDate =  new SimpleDateFormat("YYYY-MM-dd", Locale.ENGLISH).format(d1.getTime() + i * 24 * 60 * 60 * 1000);
-
+	    	    		
+	    	    	//	LocalDate d = LocalDate.now();
+	    	    		//LocalDate d2 = d.plusDays(i);
+	    	    		
+	    	    		
 	    	    		String nWeekDay = new SimpleDateFormat("E", Locale.ENGLISH).format(d1.getTime() + i * 24 * 60 * 60 * 1000);
 	    	    	
 	    	    		//System.out.println(nWeekDate+" "+nWeekDay);
