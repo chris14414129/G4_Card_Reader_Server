@@ -2,7 +2,7 @@
 public class CardReaderServer {
 
 	public static void main(String[] args) {
-		new GUI();
+	
 		// TODO Auto-generated method stub
 		
 		/* Commands for communication
@@ -51,15 +51,15 @@ public class CardReaderServer {
 		String userName= "group4_1516";
 		String password= "group4";
 		
-		roomSession rs = new roomSession(urlVagrant, userNameVagrant, passwordVagrant, 45, 4455, "127.0.0.1" );
+		//roomSession rs = new roomSession(Settings.urlInput.getText(), userNameVagrant, passwordVagrant, 45, 4455, "127.0.0.1" );
 		
 	//	rs.start();
 		
-		autoAbsent aA = new autoAbsent(urlVagrant, userNameVagrant, passwordVagrant, "Sat" );
+	//	autoAbsent aA = new autoAbsent(urlVagrant, userNameVagrant, passwordVagrant, "Sat" );
 		
 		//aA.start();
 																															
-		registration reg = new registration(urlVagrant, userNameVagrant, passwordVagrant, "xxx", 45, 1234, 5678, 50, 10);
+	//	registration reg = new registration(urlVagrant, userNameVagrant, passwordVagrant, 1234, 5678, 50, 10);
 		
 		//reg.start();
 		

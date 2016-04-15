@@ -91,7 +91,8 @@ public void run()
     	Calendar calendar = Calendar.getInstance();
     	Date curDate = calendar.getTime();
     	String day = new SimpleDateFormat("E", Locale.ENGLISH).format(curDate.getTime());
-    //	System.out.println(date);
+    	System.out.println("day: "+day+" dayAt: "+this.dayAt);
+    	
     	//String day = "Fri";
     	 
     	//System.out.println(day);
@@ -183,17 +184,22 @@ public void run()
 			    	
 			    	  }
 		    	  
+		       		
+		       
 	    	    	}
 		       
 		       
-		       
+	    	    	doOnce = true;
+	    	    int count = 0;
+	    	    count++;
+	    	    System.out.println(count);
 		       
 		
 		      //sets doOnce to true, prevents repeating during same day,
 	    	   	
 	    	  
-		      doOnce = true;
-		    System.exit(0);
+		     
+		   // System.exit(0);
 		  
 		    }
 		    
@@ -208,10 +214,14 @@ public void run()
 	
     	}
     	
+    	
+    	LocalDate localdate1 = LocalDate().now();
+    	
     	//resets doOnce
-    	if ((this.dayAt != day))
+    	if ((!this.dayAt.equals(day.trim())))
 		{
-		doOnce=false;
+    		System.out.println("doOnce reset");
+    		doOnce=false;
 		}
 	 
     	 

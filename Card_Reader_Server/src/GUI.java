@@ -9,6 +9,9 @@ public class GUI{
 	private JPanel buttonPanel;
 	private JButton startBtn, stopBtn, settingsBtn;
 	private Icon startIcon, stopIcon;
+	private roomSession rs;
+	private registration reg;
+	private autoAbsent aA;
 	
 	public GUI(){
 		window = new JFrame();
@@ -49,10 +52,17 @@ public class GUI{
 		public void actionPerformed(ActionEvent e){
 			Object src = e.getSource();
 			if (src == startBtn){
-				
+				rs = new roomSession(Settings.url, Settings.username, Settings.password, Integer.parseInt(Settings.minAt), Integer.parseInt(Settings.clientPort), Settings.serverIP );
+				rs.start();
+				aA = new autoAbsent(Settings.url, Settings.username, Settings.password, Settings.dayAt );
+				aA.start();
+				reg = new registration(Settings.url,Settings.username, Settings.password, Integer.parseInt(Settings.clientPort2), Integer.parseInt(Settings.minEarly), Integer.parseInt(Settings.minLate), Integer.parseInt(Settings.serverPort), Settings.serverIP);
+				reg.start();
 			}
 			if (src == stopBtn){
-				
+				rs.interrupt();
+				aA.interrupt();
+				reg.interrupt();
 			}
 			if (src == settingsBtn){
 				new Settings(window);
@@ -60,5 +70,4 @@ public class GUI{
 		}
 	} 
 }
-
 

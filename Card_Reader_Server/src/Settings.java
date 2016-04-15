@@ -15,10 +15,21 @@ public class Settings {
 	
 	private JDialog settings;
 	private JPanel settingsPanel, buttonPanel;
-	private JLabel usernameLbl, passwordLbl, urlLbl, serverPortLbl, clientPortLbl, dayAtLbl;
-	private JTextField usernameInput, passwordInput, urlInput, serverPortInput, clientPortInput, dayAtInput;
+	private JLabel usernameLbl, passwordLbl, urlLbl, serverPortLbl, clientPortLbl, dayAtLbl, serverIPLbl, clientPort2Lbl;
+	private JTextField usernameInput, passwordInput, urlInput, serverPortInput, clientPortInput, dayAtInput, serverIPInput, clientPort2Input;
 	private JButton submitBtn, clearBtn;
-	private String username, password, url, serverPort, clientPort, dayAt;
+	static String username = "group4_1516";
+	static String password ="group4";
+	static String url ="jdbc:mysql://194.81.104.22:3306/db_group4_1516";
+	static String serverPort ="4455";
+	static String clientPort ="4457";
+	static String clientPort2 ="4454"; //needs code
+	static String minAt = "45"; // needs code added
+	static String serverIP = "127.0.0.1"; // needs code added
+	static String minEarly = "45"; // needs code added
+	static String minLate = "15"; // needs code added
+	
+	static String dayAt ="Fri";
 	
 	
 	public Settings(JFrame parentFrame) {
@@ -50,6 +61,8 @@ public class Settings {
 	    urlLbl = new JLabel("URL: ");
 	    serverPortLbl = new JLabel("Server Port: ");
 	    clientPortLbl = new JLabel("Client Port: ");
+	    clientPort2Lbl = new JLabel("Client Port2: ");
+	    serverIPLbl = new JLabel("Network Broadcast: ");
 	    dayAtLbl = new JLabel("Day At: ");
 	    
 	    usernameInput = new JTextField();
@@ -57,6 +70,8 @@ public class Settings {
 	    urlInput = new JTextField();
 	    serverPortInput = new JTextField();
 	    clientPortInput = new JTextField();
+	    clientPort2Input = new JTextField();
+	    serverIPInput = new JTextField();
 	    dayAtInput = new JTextField();
 	    
 	    settingsPanel.add(usernameLbl);
@@ -69,6 +84,8 @@ public class Settings {
 	    settingsPanel.add(serverPortInput);
 	    settingsPanel.add(clientPortLbl);
 	    settingsPanel.add(clientPortInput);
+	    settingsPanel.add(clientPort2Input);
+	    settingsPanel.add(serverIPInput);
 	    settingsPanel.add(dayAtLbl);
 	    settingsPanel.add(dayAtInput);
 	    
@@ -107,6 +124,8 @@ public class Settings {
 						url = urlInput.getText().trim();
 						serverPort = serverPortInput.getText().trim();
 						clientPort = clientPortInput.getText().trim();
+						clientPort2 = clientPort2Input.getText().trim();
+				
 						dayAt = dayAtInput.getText().trim();
 						
 					}
