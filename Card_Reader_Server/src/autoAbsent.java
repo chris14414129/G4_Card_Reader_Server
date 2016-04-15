@@ -190,8 +190,8 @@ public void run()
 	    	    	}
 		       
 		       
-	    	   
-		
+	    	    	doOnce = true;
+	    	  
 		      //sets doOnce to true, prevents repeating during same day,
 	    	   	
 	    	  
@@ -218,11 +218,11 @@ public void run()
     	 
     	
     	
-    //	System.out.println(text);
+    	
     	//resets doOnce
     	if ((!this.dayAt.equals(text)))
 		{
-    		//System.out.println("doOnce reset");
+    		System.out.println("doOnce reset");
     		doOnce=false;
 		}
 	 
