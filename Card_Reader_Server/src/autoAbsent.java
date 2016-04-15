@@ -8,6 +8,7 @@ import java.sql.Time;
 import java.text.*;
 import java.util.*;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 
 public class autoAbsent  extends Thread{
 private String connection;
@@ -91,7 +92,7 @@ public void run()
     	Calendar calendar = Calendar.getInstance();
     	Date curDate = calendar.getTime();
     	String day = new SimpleDateFormat("E", Locale.ENGLISH).format(curDate.getTime());
-    	System.out.println("day: "+day+" dayAt: "+this.dayAt);
+    	//System.out.println("day: "+day+" dayAt: "+this.dayAt);
     	
     	//String day = "Fri";
     	 
@@ -215,12 +216,17 @@ public void run()
     	}
     	
     	
-    	LocalDate localdate1 = LocalDate().now();
+    	LocalDate localdate1 = LocalDate.now();
+    	 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E");
+    	 String text = localdate1.format(formatter);
+    	 
     	
+    	
+    	System.out.println(text);
     	//resets doOnce
-    	if ((!this.dayAt.equals(day.trim())))
+    	if ((!this.dayAt.equals(text)))
 		{
-    		System.out.println("doOnce reset");
+    		//System.out.println("doOnce reset");
     		doOnce=false;
 		}
 	 
