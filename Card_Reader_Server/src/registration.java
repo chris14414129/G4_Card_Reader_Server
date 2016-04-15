@@ -246,7 +246,7 @@ public void run()
     							   	{
     							
 				 
-    								   onTime = con.prepareStatement("UPDATE attendances SET absent=0, on_time=1, time='"+timeStamp+"' WHERE timetable_id = '"+timeTableID+"' ");
+    								   onTime = con.prepareStatement("UPDATE attendances SET absent=null, on_time=1, time='"+timeStamp+"' WHERE timetable_id = '"+timeTableID+"' ");
 				 	
     								
     								   onTime.executeUpdate();
@@ -259,7 +259,7 @@ public void run()
     								else if (((cHour == (sqlHourInt)) && ((min >= 0) && (min <= lateTime))) )
     							   	{
     								
-    								   late = con.prepareStatement("UPDATE attendances SET absent=0, late=1, time='"+timeStamp+"' WHERE timetable_id = '"+timeTableID+"' ");
+    								   late = con.prepareStatement("UPDATE attendances SET absent=null, late=1, time='"+timeStamp+"' WHERE timetable_id = '"+timeTableID+"' ");
     								   late.executeUpdate();
     								   response(roomID, "CON", "LATE");
     							   	}
@@ -324,7 +324,7 @@ public void run()
     										   	// if ((((min >= early) && (min <= 59))) ) 
     										   	if (((cHour == (sqlHourInt-1)) && ((min >= early) && (min <=59))) )
     										   		{
-    										   			wrongOnTime = con.prepareStatement("UPDATE attendances SET absent=0, on_time=1, time='"+timeStamp+"', wrong_ses=1 WHERE timetable_id = '"+wrongTimeTableID+"' ");	 
+    										   			wrongOnTime = con.prepareStatement("UPDATE attendances SET absent=null, on_time=1, time='"+timeStamp+"', wrong_ses=1 WHERE timetable_id = '"+wrongTimeTableID+"' ");	 
     										   			wrongOnTime.executeUpdate();
     										   			response(roomID, "CON", "PASS");
     										   		}
@@ -334,7 +334,7 @@ public void run()
     										   	else if (((cHour == (sqlHourInt)) && ((min >= 0) && (min <= lateTime))) )
     										   	{
 	        		
-    										   		wrongLate = con.prepareStatement("UPDATE attendances SET absent=0, late=1, time='"+timeStamp+"', wrong_ses=1 WHERE timetable_id = '"+wrongTimeTableID+"' ");		 
+    										   		wrongLate = con.prepareStatement("UPDATE attendances SET absent=null, late=1, time='"+timeStamp+"', wrong_ses=1 WHERE timetable_id = '"+wrongTimeTableID+"' ");		 
     										   		wrongLate.executeUpdate();
     										   		response(roomID, "CON", "LATE");
     										   	}
