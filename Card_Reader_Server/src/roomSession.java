@@ -86,10 +86,10 @@ public class roomSession extends Thread {
 	    	LocalTime localTime = LocalTime.now();
 	    	
 	    	//get's current minute and hour
-	    	//int min = localTime.getMinute();
-	    	//int hour = localTime.getHour()+1;
-	    	int min= 45;
-	    	int hour=19;
+	    	int min = localTime.getMinute();
+	    	int hour = localTime.getHour()+1;
+	    //	int min= 45;
+	    	//int hour=11;
 	    	
 	    //	System.out.println(hour);
 	    //	System.out.println(min);
@@ -102,8 +102,8 @@ public class roomSession extends Thread {
 	    	//gets current day
 	    	Calendar calendar = Calendar.getInstance();
 	    	Date date = calendar.getTime();
-	    	//String day = new SimpleDateFormat("E", Locale.ENGLISH).format(date.getTime());
-	    	String day = "Mon";
+	    	String day = new SimpleDateFormat("E", Locale.ENGLISH).format(date.getTime());
+	    	//String day = "Fri";
 	    	 
 	    	//System.out.println(day);
 	   
@@ -117,7 +117,7 @@ public class roomSession extends Thread {
 	    			try
 	    			{
 	    				//System.out.println(t);
-	    				session = con.prepareStatement("SELECT ses_code, ses_name, time, duration, room_id FROM sessions WHERE time = '"+t+"'" );
+	    				session = con.prepareStatement("SELECT ses_code, ses_name, time, duration, room_id FROM sessions WHERE time = '"+t+"' AND day = '"+day+"'" );
 	    				rs = session.executeQuery();
 	    			
 	    				while (rs.next())
@@ -162,10 +162,20 @@ public class roomSession extends Thread {
 		    				String sName = rs.getString("ses_name");
 		    				//String sName = "This is a test";
 		    				
+		    				String sNameShort;
+		    				
+		    				if(sName.length() >19)
+		    				{
+		    				sNameShort = sName.substring(0,19);
+		    				}
+		    				else
+		    				{
+		    					sNameShort = sName;
+		    				}
 		    				//http://www.dotnetperls.com/padding-java
 		    				//http://stackoverflow.com/questions/388461/how-can-i-pad-a-string-in-java
-		    				String sCodeFormatted = String.format("%1$-11s", sCode).replace(" ", "*");
-		    				String sNameFormatted = String.format("%1$-30s", sName).replace(" ", "*");
+		    				String sCodeFormatted = String.format("%1$-11s", sCode).replace(" ", " ");
+		    				String sNameFormatted = String.format("%1$-30s", sNameShort).replace(" ", " ");
 		    				
 		    				
 		    				
@@ -240,7 +250,7 @@ public class roomSession extends Thread {
 		                    session.close();
 		                }
 		                if (con != null) {
-		                    con.close();
+		                   // con.close();
 		                }
 		    }
 		    catch(SQLException e)

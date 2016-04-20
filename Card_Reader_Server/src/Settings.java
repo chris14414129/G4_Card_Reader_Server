@@ -22,10 +22,10 @@ public class Settings {
 	static String password ="group4";
 	static String url ="jdbc:mysql://194.81.104.22:3306/db_group4_1516";
 	static String serverPort ="4455";
-	static String clientPort ="4457";
+	static String clientPort ="4456";
 	static String clientPort2 ="4454"; //needs code
 	static String minAt = "45"; // needs code added
-	static String serverIP = "127.0.0.1"; // needs code added
+	static String serverIP = "192.168.168.255"; // needs code added
 	static String minEarly = "45"; // needs code added
 	static String minLate = "15"; // needs code added
 	

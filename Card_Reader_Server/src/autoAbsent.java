@@ -113,7 +113,7 @@ public void run()
 		    	
 		    //	String timeStamp = new SimpleDateFormat("yyyy-MM-dd "+t).format(Calendar.getInstance().getTime());
 
-		    	//System.out.println(timeStamp);
+		    	System.out.println("test");
 		        
 		    	
 		    	
@@ -191,6 +191,7 @@ public void run()
 		       
 		       
 	    	    	doOnce = true;
+	    	    	System.out.println("doonce");
 	    	  
 		      //sets doOnce to true, prevents repeating during same day,
 	    	   	
@@ -214,9 +215,9 @@ public void run()
     	
     	LocalDate localdate1 = LocalDate.now();
     	 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E");
-    	 String text = localdate1.format(formatter);
+    	 //String text = localdate1.format(formatter);
     	 
-    	
+    	String text = "Fri";
     	
     	
     	//resets doOnce

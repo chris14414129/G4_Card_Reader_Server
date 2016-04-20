@@ -136,11 +136,11 @@ public void run()
 		LocalTime localTime = LocalTime.now();
 	
 		//get's current minute and hour
-		//int min = localTime.getMinute();
-		 //	int cHour = localTime.getHour()+1; //cHour means current Hour
+		int min = localTime.getMinute();
+		 	int cHour = localTime.getHour()+1; //cHour means current Hour
 		//int sec = localTime.getSecond();
-		int min=50;
-		int cHour=10;
+		//int min=50;
+		//int cHour=10;
 		int hour=cHour+1;
 		//int sec = 0;
 	
@@ -159,7 +159,7 @@ public void run()
 		Calendar calendar = Calendar.getInstance();
 		Date date = calendar.getTime();
 		String day = new SimpleDateFormat("E", Locale.ENGLISH).format(date.getTime());
-		//String day = "Mon";
+		//String day = "Fri";
 		 
 		//System.out.println(day);
 	  	 
@@ -233,7 +233,7 @@ public void run()
     					   	{
 
     						   int status = oTCRS.getInt(1);
-    						//   System.out.println("status1: "+status);
+    						   System.out.println("status1: "+status);
 				
 				 
     						   if (status == 1)
@@ -270,6 +270,10 @@ public void run()
     								   response(roomID, "CON", "FAIL");
     							   	}
     						   	}
+    						   else
+							   	{
+								   response(roomID, "CON", "LATE");
+							   	}
     					   	} 
     				   	} 
 		 
@@ -346,8 +350,18 @@ public void run()
     										   	}
     									   	}
     								   	}
+    								   else
+    								   {
+    									  // System.out.println("t");
+    									   response(roomID, "CON", "FAIL");
+    								   }
     							   	}
     						   	}
+    						   else
+							   {
+								   //System.out.println("t");
+								   response(roomID, "CON", "FAIL");
+							   }
     					   	}
 			 
     				   	}
@@ -357,6 +371,7 @@ public void run()
     		   	}
     		   else
     		   { 
+    			   System.out.println("test");
     			   response(roomID, "CON", "FAIL");
     		   }
       
