@@ -137,7 +137,7 @@ public void run()
 	
 		//get's current minute and hour
 		int min = localTime.getMinute();
-		 	int cHour = localTime.getHour()+1; //cHour means current Hour
+		 	int cHour = localTime.getHour(); //cHour means current Hour
 		//int sec = localTime.getSecond();
 		//int min=50;
 		//int cHour=10;

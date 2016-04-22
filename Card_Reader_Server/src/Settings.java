@@ -16,7 +16,9 @@ public class Settings {
 	private JDialog settings;
 	private JPanel settingsPanel, buttonPanel;
 	private JLabel usernameLbl, passwordLbl, urlLbl, serverPortLbl, clientPortLbl, dayAtLbl, serverIPLbl, clientPort2Lbl;
+	private JLabel minAtLbl, minEarlyLbl, minLateLbl;
 	private JTextField usernameInput, passwordInput, urlInput, serverPortInput, clientPortInput, dayAtInput, serverIPInput, clientPort2Input;
+	private JTextField minAtInput, minEarlyInput, minLateInput;
 	private JButton submitBtn, clearBtn;
 	static String username = "group4_1516";
 	static String password ="group4";
@@ -30,7 +32,7 @@ public class Settings {
 	static String minLate = "15"; // needs code added
 	
 	static String dayAt ="Fri";
-	
+
 	
 	public Settings(JFrame parentFrame) {
 		settings = new JDialog(parentFrame, true);
@@ -54,7 +56,7 @@ public class Settings {
 	private void buildSettingsPanel(){
 		
 		settingsPanel = new JPanel();
-	    settingsPanel.setLayout(new GridLayout(6,2));
+	    settingsPanel.setLayout(new GridLayout(11,2));
 	    
 	    usernameLbl = new JLabel("Username: ");
 	    passwordLbl = new JLabel("Password: ");
@@ -62,8 +64,11 @@ public class Settings {
 	    serverPortLbl = new JLabel("Server Port: ");
 	    clientPortLbl = new JLabel("Client Port: ");
 	    clientPort2Lbl = new JLabel("Client Port2: ");
-	    serverIPLbl = new JLabel("Network Broadcast: ");
+	    serverIPLbl = new JLabel("Server IP: ");
 	    dayAtLbl = new JLabel("Day At: ");
+	    minAtLbl = new JLabel("Minutes At: ");
+	    minEarlyLbl = new JLabel("Minutes Early: ");
+	    minLateLbl = new JLabel("Minutes Late: ");
 	    
 	    usernameInput = new JTextField();
 	    passwordInput = new JTextField();
@@ -73,6 +78,9 @@ public class Settings {
 	    clientPort2Input = new JTextField();
 	    serverIPInput = new JTextField();
 	    dayAtInput = new JTextField();
+	    minAtInput = new JTextField();
+	    minEarlyInput = new JTextField();
+	    minLateInput = new JTextField();
 	    
 	    settingsPanel.add(usernameLbl);
 	    settingsPanel.add(usernameInput);
@@ -84,10 +92,18 @@ public class Settings {
 	    settingsPanel.add(serverPortInput);
 	    settingsPanel.add(clientPortLbl);
 	    settingsPanel.add(clientPortInput);
+	    settingsPanel.add(clientPort2Lbl);
 	    settingsPanel.add(clientPort2Input);
+	    settingsPanel.add(serverIPLbl);
 	    settingsPanel.add(serverIPInput);
 	    settingsPanel.add(dayAtLbl);
 	    settingsPanel.add(dayAtInput);
+	    settingsPanel.add(minAtLbl);
+	    settingsPanel.add(minAtInput);
+	    settingsPanel.add(minEarlyLbl);
+	    settingsPanel.add(minEarlyInput);
+	    settingsPanel.add(minLateLbl);
+	    settingsPanel.add(minLateInput);
 	    
 	}
 	

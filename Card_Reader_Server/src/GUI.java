@@ -16,8 +16,8 @@ public class GUI{
 	public GUI(){
 		window = new JFrame();
 		window.setTitle("Server");
-		window.setSize(500, 500);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setLayout(new BoxLayout(window.getContentPane(), BoxLayout.Y_AXIS));
 		
 		buildButtonPanel();
 		window.add(buttonPanel);
@@ -32,11 +32,8 @@ public class GUI{
 	public void buildButtonPanel(){
 		buttonPanel = new JPanel();
 		
-		startIcon = new ImageIcon("\\icons\\Play.png");
-		stopIcon = new ImageIcon("\\icons\\Stop.png");
-		
-		startBtn = new JButton("Start", startIcon);
-		stopBtn = new JButton("Stop", stopIcon);
+		startBtn = new JButton("Start");
+		stopBtn = new JButton("Stop");
 		settingsBtn = new JButton("Settings");
 		
 		startBtn.addActionListener(new actionListener());
@@ -70,4 +67,3 @@ public class GUI{
 		}
 	} 
 }
-

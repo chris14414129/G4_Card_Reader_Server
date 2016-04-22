@@ -215,9 +215,9 @@ public void run()
     	
     	LocalDate localdate1 = LocalDate.now();
     	 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E");
-    	 //String text = localdate1.format(formatter);
+    	 String text = localdate1.format(formatter);
     	 
-    	String text = "Fri";
+    	//String text = "Fri";
     	
     	
     	//resets doOnce
