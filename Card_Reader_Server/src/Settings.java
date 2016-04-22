@@ -27,7 +27,7 @@ public class Settings {
 	static String clientPort ="4456";
 	static String clientPort2 ="4454"; //needs code
 	static String minAt = "45"; // needs code added
-	static String serverIP = "192.168.168.255"; // needs code added
+	static String serverIP = "192.168.168.3"; // needs code added
 	static String minEarly = "45"; // needs code added
 	static String minLate = "15"; // needs code added
 	
